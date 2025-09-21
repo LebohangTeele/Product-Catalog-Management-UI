@@ -1,0 +1,93 @@
+<div class="container mt-4">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary">
+      <i class="bi bi-box-seam me-2"></i>
+      Products
+    </h2>
+    <a class="btn btn-primary" routerLink="/products/add">
+      <i class="bi bi-plus-circle me-2"></i>
+      Add Product
+    </a>
+  </div>
+
+  <!-- Search and Filter Row -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <app-search-bar (search)="onSearch($event)"></app-search-bar>
+    </div>
+    <div class="col-md-4">
+      <app-category-filter [categories]="categories" (categoryChange)="onCategoryChange($event)"></app-category-filter>
+    </div>
+  </div>
+
+  <!-- Loading and Error States -->
+  <app-loading-indicator *ngIf="loading"></app-loading-indicator>
+  <app-error-message [error]="error"></app-error-message>
+
+  <!-- Products Table -->
+  <div class="card shadow-sm" *ngIf="!loading && products.length">
+    <div class="card-header">
+      <h5 class="card-title mb-0">
+        <i class="bi bi-table me-2"></i>
+        Product List ({{ products.length }})
+      </h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">SKU</th>
+            <th scope="col">Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Category</th>
+            <th scope="col" class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of products">
+            <td class="fw-bold">{{ product.name }}</td>
+            <td><code>{{ product.sku }}</code></td>
+            <td class="text-success fw-bold">{{ product.price | currency }}</td>
+            <td>
+              <span class="badge" [class]="product.quantity > 0 ? 'bg-success' : 'bg-danger'">
+                {{ product.quantity }}
+              </span>
+            </td>
+            <td>
+              <span class="badge bg-secondary">{{ getCategoryName(product.categoryId) }}</span>
+            </td>
+            <td class="text-center">
+              <div class="btn-group btn-group-sm">
+                <button 
+                  class="btn btn-outline-primary" 
+                  [routerLink]="['/products/edit', product.id]"
+                  title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button 
+                  class="btn btn-outline-danger" 
+                  (click)="onDelete(product)"
+                  title="Delete">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="text-center py-5" *ngIf="!loading && !error && products.length === 0">
+    <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+    <h4 class="text-muted">No products found</h4>
+    <p class="text-muted mb-4">Start by adding your first product to the catalog.</p>
+    <a class="btn btn-primary btn-lg" routerLink="/products/add">
+      <i class="bi bi-plus-circle me-2"></i>
+      Add First Product
+    </a>
+  </div>
+</div>

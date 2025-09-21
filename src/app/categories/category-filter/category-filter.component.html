@@ -1,0 +1,18 @@
+<div class="category-filter">
+  <label for="categorySelect" class="form-label">
+    <i class="bi bi-funnel me-2"></i>
+    Filter by Category
+  </label>
+  <select 
+    id="categorySelect"
+    class="form-select" 
+    (change)="onChange($event)">
+    <option value="">
+      <i class="bi bi-grid-3x3-gap"></i>
+      All Categories
+    </option>
+    <option *ngFor="let cat of categories" [value]="cat.id">
+      {{ cat.name }}
+    </option>
+  </select>
+</div>
